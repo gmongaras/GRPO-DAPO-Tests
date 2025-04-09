@@ -21,15 +21,16 @@ group_batch_size = 8
 num_steps = 1000
 max_length = 512
 G = 16
-min_batch_size = 4
+min_batch_size = batch_size
 eps_low = 0.2
 eps_high = 0.28
 lr = 1e-6
 desired_length = 400
 max_length = 512
-warmup_steps = 20
+warmup_steps = 0
 temperature = 0.7
-use_resampling = False
+length_penalty = True
+use_resampling = True
 num_steps_save = 10
 save_path = "models/"
 
@@ -167,7 +168,8 @@ old_policy.eval()
 policy.eval()
 
 
-for step, batch in enumerate(data_loader_train):
+step = 0
+for batch in data_loader_train:
     # We want to do all this without grad. We will do a trick to
     # do this with grad later.
     with torch.no_grad():
@@ -211,7 +213,7 @@ for step, batch in enumerate(data_loader_train):
                 batch_idx = j % batch_size
 
                 # Get the reward
-                rew, correct = get_reward(text_outputs[j], batch["answer"][j], lengths[j].item(), max_length, desired_length)
+                rew, correct = get_reward(text_outputs[j], batch["answer"][j], lengths[j].item(), max_length, desired_length, length_penalty=length_penalty)
                 rewards_by_prompt[batch_idx].append(rew)
                 numcorrect_by_prompt[batch_idx] += correct
 
@@ -232,7 +234,7 @@ for step, batch in enumerate(data_loader_train):
                 batch_buffer_tokens.append(tokens_by_prompt[i])
 
     # Get more data if the batch isn't large enough
-    if len(batch_buffer_rewards) < batch_size:
+    if len(batch_buffer_rewards) < min_batch_size:
         continue
 
     # Put policy in train mode
@@ -254,7 +256,7 @@ for step, batch in enumerate(data_loader_train):
 
     # Weight for the entire batch for all groups is the
     # total number of tokens
-    loss_weight = 1/batch_buffer_loss_masks.sum()
+    loss_weight = 1/batch_buffer_loss_masks.int().sum()
 
     # Total reward for logging
     total_reward = 0
@@ -330,3 +332,5 @@ for step, batch in enumerate(data_loader_train):
         torch.save(policy, save_path + f"policy_{step}.pt")
         policy = policy.cuda()
         torch.cuda.empty_cache()
+
+    step += 1
