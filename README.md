@@ -3,21 +3,26 @@ Just playing around a little with [GRPO](https://arxiv.org/pdf/2402.03300) and [
 May also add some RLHF here if I can get it working. Seems the current code works. I just only have it on one GPU making it really slow. But it does make progress it seems.
 
 ```
-Question: Maya packed a gift box for her cousin. She first placed the empty box on a scale and added enough cookies to make the box weigh 3 pounds. Then, she added enough chocolate bars to double the weight. After that, she added another 3 pounds of cookies. Finally, she added enough candy canes to triple the weight of the box at that point. What was the final weight of the box, in pounds?assistant
+Question: Maya packed a gift box for her cousin. She first placed the empty box on a scale and added enough cookies to make the box weigh 3 pounds. Then, she added enough chocolate bars to double the weight. After that, she added another 3 pounds of cookies. Finally, she added enough candy canes to triple the weight of the box at that point. What was the final weight of the box, in pounds? Translate the answer to binary. then translate it to hex from binary.
 
-To solve this problem, let's break it down step by step.
+Step 1: First, let's reason about the problem and the steps involved in finding the final weight of the box.
+- Maya starts with an empty box weighing 0 pounds.
+- She adds cookies to make it weigh 3 pounds.
+- She then adds chocolate bars to double the weight, making it 6 pounds.
+- Next, she adds another 3 pounds of cookies, making it 9 pounds.
+- Finally, she adds candy canes to triple the weight, making it 27 pounds.
 
-1. Maya first placed an empty box on the scale and added enough cookies to make it weigh 3 pounds. This means the box now weighs 3 pounds with the cookies.
+Step 2: Since the problem asks for the final weight of the box in pounds, we just need to keep track of the final weight which is 27 pounds.
 
-2. Then, she added enough chocolate bars to double the weight. Since the box weighed 3 pounds with the cookies, doubling it means it now weighs 3 * 2 = 6 pounds.
+Step 3: To translate 27 to binary, we need to find the binary representation of 27.
 
-3. After that, she added another 3 pounds of cookies. Now, the weight is 6 (from the chocolate bars) + 3 (new cookies) = 9 pounds.
+27 in binary is 11011
 
-4. Finally, she added enough candy canes to triple the weight of the box at that point. Since the box weighed 9 pounds at this point, tripling it means it now weighs 9 * 3 = 27 pounds.
+Step 4: To translate the binary to hex we need to convert binary to decimal first then hex, 11011 in decimal is 27
 
-Therefore, the final weight of the box is 27 pounds.
+27 in hex is 1B
 
 {
-    "solution": 27
+    "solution": "1B"
 }
 ```
